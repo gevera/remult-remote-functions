@@ -14,5 +14,8 @@ export class Task {
 	completed: boolean = false;
 
 	@Fields.createdAt()
-	createdAt?: Date;
+	createdAt = new Date();
+
+	@Fields.updatedAt()
+	updatedAt = new Date();
 }
