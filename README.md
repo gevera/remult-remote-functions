@@ -56,10 +56,10 @@ No overload matches this call.
                       Index signature for type 'string' is missing in type 'Date'.ts(2769)
 ```
 
-- ### Redirect issues 
+- ### Navigation issues 
 
-Also, I have notice a strange behavior in routing in __/tasks__ endpoint
+Also, I have notice a strange behavior in navigation of tasks
 
-In case there are multiple tasks (more then 2-3) and if you visit each one of the tasks pages, the url will change but the page wont render and stay the same (/tasks)
+In case there are multiple tasks in __/tasks__ (more then 2-3) page and if you visit the tasks pages, and come back to the main __/tasks__ page, the url path will change but the page wont render and stay the same (/tasks)
 
 For single task server load I've used both pg and and also remult with same result. Page wont load. I've used both default string in a href tag as well as route function from vite-plugin-kit-routes. 
