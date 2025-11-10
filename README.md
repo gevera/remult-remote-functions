@@ -1,4 +1,4 @@
-# About the project 
+# About the project
 This project aims at exploring Svelte's new Remote Functions and how well Remult integrates with them
 
 Latest version's are used for SvelteKit and Remult. 2.48.4 and 3.2.3 respectively
@@ -6,7 +6,7 @@ Latest version's are used for SvelteKit and Remult. 2.48.4 and 3.2.3 respectivel
 
 ## Findings and peculiarities:
 
-- ### Remult's standard schema 
+- ### Remult's standard schema
 
 In ```src/lib/services/tasks.remote.ts``` we have a query remote function that should return a single task. As we can see the standardSchema here works
 
@@ -56,10 +56,10 @@ No overload matches this call.
                       Index signature for type 'string' is missing in type 'Date'.ts(2769)
 ```
 
-- ### Navigation issues 
 
-Also, I have notice a strange behavior in navigation of tasks
+# TODO:
 
-In case there are multiple tasks in __/tasks__ (more then 2-3) page and if you visit the tasks pages, and come back to the main __/tasks__ page, the url path will change but the page wont render and stay the same (/tasks)
-
-For single task server load I've used both pg and and also remult with same result. Page wont load. I've used both default string in a href tag as well as route function from vite-plugin-kit-routes. 
+- Add Better Auth
+- Add S3 File Uploads
+- Add Background Jobs
+- Add Telegram Bot for Notifications

@@ -42,9 +42,17 @@
 			<li id={idx}>
 				<a href={route('/tasks/[id]', { id })}>
 					<span>{completed ? 'V' : 'X'}</span>
-					{title}
+					<span class:crossed={completed}>
+						{title}
+					</span>
 				</a>
 			</li>
 		{/each}
 	</ul>
 </div>
+
+<style>
+	.crossed {
+		text-decoration: line-through;
+	}
+</style>

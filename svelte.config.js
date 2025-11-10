@@ -1,5 +1,5 @@
-import adapter from '@sveltejs/adapter-node';
-// import adapter from 'svelte-adapter-bun';
+// import adapter from '@sveltejs/adapter-node';
+import adapter from 'svelte-adapter-bun';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -28,8 +28,7 @@ const config = {
 			$server: './src/server',
 			'$server/*': './src/server/*',
 			$entities: './src/lib/entities',
-			'$entities/*': './src/lib/entities/*',
-
+			'$entities/*': './src/lib/entities/*'
 		}
 	}
 };
