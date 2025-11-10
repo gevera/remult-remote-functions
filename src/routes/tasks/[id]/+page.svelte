@@ -3,21 +3,29 @@
 	import { route } from '$lib/ROUTES';
 	import { repo } from 'remult';
 	import type { PageProps } from './$types';
-	import { deleteTask } from '$lib/services/tasks.remote';
+	import { goto } from '$app/navigation';
 
-	let { data, params }: PageProps = $props();
-	let { task } = data;
-	let remultTask = $state<Task>();
-    let deleteDialog: HTMLDialogElement;
+	let { params }: PageProps = $props();
+	let deleteDialog: HTMLDialogElement;
+	let task = $state<Task>();
 
 	$effect(() => {
 		repo(Task)
 			.findFirst({ id: params.id })
-			.then((t) => (remultTask = t));
+			.then((t) => {
+				if (t) {
+					task = t;
+				} else {
+					goto(route('/tasks'));
+				}
+			});
 	});
 
-    const handleCloseModal = () => deleteDialog.close()
-    const handleOpenModal = () => deleteDialog.showModal()
+	const handleCloseModal = () => deleteDialog.close();
+	const handleOpenModal = () => deleteDialog.showModal();
+	const setCompleted = async (task: Task, completed: boolean) => {
+		await repo(Task).save({ ...task, completed });
+	};
 </script>
 
 <section>
@@ -30,29 +38,30 @@
 	<h4>From Page Server</h4>
 	<pre>{JSON.stringify(task, null, 2)}</pre>
 
-	<h2>{task.title}</h2>
-	<hr>
-	<h5>Is completed: {task.completed}</h5>
-	<h5>Created at: {task.createdAt}</h5>
-    <button onclick={handleOpenModal}>Delete Task</button>
+	<h2>{task?.title}</h2>
+	<hr />
+
+	<label for="task_completed">Task Completed</label>
+	<input
+		type="checkbox"
+		name="task_completed"
+		checked={task?.completed}
+		oninput={(e) => setCompleted(task, e.currentTarget.checked)}
+	/>
+	<h5>Created at: {task?.createdAt}</h5>
+	<button onclick={handleOpenModal}>Delete Task</button>
 </div>
 
 <dialog bind:this={deleteDialog}>
-    <h5>Are you sure you want to delete this task?</h5>
-    <button onclick={handleCloseModal}>No</button>
-    <form {...deleteTask}>
-        <button type="submit">Yes</button>
-    </form>
+	<h5>Are you sure you want to delete this task?</h5>
+	<button onclick={handleCloseModal}>No</button>
+	<form
+		onsubmit={async (e) => {
+			e.preventDefault();
+			await repo(Task).delete({ id: task?.id });
+			goto(route('/tasks'));
+		}}
+	>
+		<button type="submit">Yes</button>
+	</form>
 </dialog>
-
-<hr />
-
-<div>
-	<h4>Remult Task</h4>
-	<pre>
-        {JSON.stringify(remultTask, null, 2)}
-    </pre>
-	<p>
-		{remultTask?.createdAt}
-	</p>
-</div>

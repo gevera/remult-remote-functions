@@ -1,28 +1,47 @@
 <script lang="ts">
+	import { Task } from '$entities';
 	import { route } from '$lib/ROUTES';
-	import { getAllTasks, createTask } from '$lib/services/tasks.remote';
-	import type { PageProps } from './$types';
+	import { repo } from 'remult';
+	let tasks = $state<Task[]>([]);
+	let title = $state('');
 
-	let { data }: PageProps = $props();
+	$effect(() => {
+		return repo(Task)
+			.liveQuery()
+			.subscribe((info) => {
+				tasks = info.applyChanges(tasks);
+			});
+	});
+
+	const addTask = async (e: Event) => {
+		e.preventDefault();
+		await repo(Task).insert({ title });
+		title = '';
+	};
 </script>
 
 <section>
 	<h1>All Tasks</h1>
 </section>
-<h3>Total tasks: {data.total}</h3>
 <a href={route('/')}>Back</a>
 
-<form {...createTask}>
-	<input type="text" name="title" required placeholder="What do you want to do next" />
+<form onsubmit={addTask}>
+	<input
+		type="text"
+		name="title"
+		required
+		placeholder="What do you want to do next"
+		bind:value={title}
+	/>
 	<button type="submit">Add</button>
 </form>
 
 <div>
 	<ul>
-		{#each await getAllTasks() as { title, id }, idx (id)}
+		{#each tasks as { title, id, completed }, idx (id)}
 			<li id={idx}>
-				<!-- <a href={route('/tasks/[id]', { id })}> -->
-				<a href={`/tasks/${id}`}>
+				<a href={route('/tasks/[id]', { id })}>
+					<span>{completed ? 'V' : 'X'}</span>
 					{title}
 				</a>
 			</li>
